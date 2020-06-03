@@ -2,6 +2,8 @@ package com.oldfredddy.workout;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,12 +15,24 @@ import android.widget.TextView;
 public class WorkoutDetailFragment extends Fragment {
     private long workoutId;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null){
+            workoutId = savedInstanceState.getLong("workoutId");
+        }
+    }
 
     @Override
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+//        if (savedInstanceState != null){
+//            workoutId = savedInstanceState.getLong("workoutId");
+//        }
         // Inflate the layout for this fragment
+        System.out.println(workoutId);
         return inflater.inflate(R.layout.fragment_workout_detail, container, false);
     }
 
@@ -26,16 +40,21 @@ public class WorkoutDetailFragment extends Fragment {
     public void onStart() {
         super.onStart();
         View view = getView();
-        if (view != null){
+        if (view != null) {
             TextView title = view.findViewById(R.id.textTitle);
-            Workout workout = Workout.workouts[(int)workoutId];
+            Workout workout = Workout.workouts[(int) workoutId];
             title.setText(workout.getName());
             TextView description = view.findViewById(R.id.textDescription);
             description.setText(workout.getDescription());
         }
     }
 
-    public void setWorkout(long id){
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putLong("workoutId", workoutId);
+    }
+
+    public void setWorkout(long id) {
         this.workoutId = id;
     }
 }
