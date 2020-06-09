@@ -10,12 +10,13 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Locale;
 
 
-public class StopwatchFragment extends Fragment {
+public class StopwatchFragment extends Fragment implements View.OnClickListener {
     //Количество секунд на секундомере.
     private int seconds = 0;
     //Секундомер работает?
@@ -37,7 +38,14 @@ public class StopwatchFragment extends Fragment {
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_stopwatch, container, false); //Назначить макет фрагмента
         runTimer(layout); //Передать макет при вызове метода runTimer()
+        Button startButton = layout.findViewById(R.id.start_button);
+        startButton.setOnClickListener(this);
+        Button stopButton = layout.findViewById(R.id.stop_button);
+        stopButton.setOnClickListener(this);
+        Button resetButton = layout.findViewById(R.id.reset_button);
+        resetButton.setOnClickListener(this);
         return layout;
+
     }
 
     @Override
@@ -64,15 +72,15 @@ public class StopwatchFragment extends Fragment {
         //Сохранить значение переменных перед уничтожением активности.
     }
 
-    public void onClickStart(View view) {
+    private void onClickStart() {
         running = true;
     }
 
-    public void onClickStop(View view) {
+    private void onClickStop() {
         running = false;
     }
 
-    public void onClickReset(View view) {
+    private void onClickReset() {
         running = false;
         seconds = 0;
     }
@@ -86,9 +94,9 @@ public class StopwatchFragment extends Fragment {
                 int hours = seconds / 3600;
                 int minutes = (seconds % 3600) / 60;
                 int secs = seconds % 60;
-                String time = String.format(Locale.getDefault(),"%d:%02d:%02d",hours,minutes,secs);
+                String time = String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, secs);
                 timeView.setText(time);
-                if (running){
+                if (running) {
                     seconds++;
                 }
                 handler.postDelayed(this, 1000);
@@ -97,4 +105,18 @@ public class StopwatchFragment extends Fragment {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.start_button:
+                onClickStart();
+                break;
+            case R.id.stop_button:
+                onClickStop();
+                break;
+            case R.id.reset_button:
+                onClickReset();
+                break;
+        }
+    }
 }
